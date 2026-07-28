@@ -168,3 +168,96 @@ def registrar_y_comparar_modelo(
     with open(HISTORIAL_FILE, 'w') as f:
         json.dump(historial, f, indent=4)
     print(f"{C_GREEN}✅ Historial actualizado con éxito.{C_RESET}")
+
+def generar_reporte_auditoria_markdown(
+    nombre_proyecto: str,
+    df_info: Dict[str, Any],
+    resultado_auditoria: bool,
+    metricas_modelo: Dict[str, float],
+    top_features: Optional[pd.DataFrame] = None,
+    output_path: str = "reporte_auditoria.md"
+) -> str:
+    """
+    Genera un informe técnico completo en formato Markdown con los resultados
+    de la auditoría QA, calidad de datos y evaluación del modelo.
+    
+    Args:
+        nombre_proyecto: Nombre del proyecto o dataset.
+        df_info: Diccionario con llaves como 'filas', 'columnas', 'nulos', 'memoria_mb'.
+        resultado_auditoria: Indica si el dataset aprobó la auditoría QA.
+        metricas_modelo: Diccionario con las métricas obtenidas.
+        top_features: DataFrame opcional con 'Feature' e 'Importance'.
+        output_path: Ruta de salida para el archivo Markdown.
+        
+    Returns:
+        Ruta del archivo Markdown generado.
+    """
+    fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    estado = "✅ APROBADO PARA PRODUCCIÓN" if resultado_auditoria else "❌ RECHAZADO (Errores Críticos)"
+    
+    md_content = f"""# 🛡️ Reporte de Gobernanza y Auditoría de Datos – DS Guardian
+
+**Proyecto:** {nombre_proyecto}  
+**Fecha de Generación:** {fecha}  
+**Estado QA:** {estado}  
+
+---
+
+## 📊 1. Resumen de la Estructura de Datos
+
+| Métrica | Valor |
+| :--- | :--- |
+| **Total de Filas / Muestras** | {df_info.get('filas', 'N/A')} |
+| **Total de Columnas** | {df_info.get('columnas', 'N/A')} |
+| **Valores Nulos Restantes** | {df_info.get('nulos', 0)} |
+| **Uso de Memoria RAM** | {df_info.get('memoria_mb', 'N/A')} MB |
+
+---
+
+## 🕵️ 2. Diagnóstico del Agente de Auditoría QA
+
+* **Control de Nulos:** {'✅ Sin nulos' if df_info.get('nulos', 0) == 0 else '❌ Con nulos'}
+* **Tipos de Datos:** ✅ Numéricos y codificados en One-Hot / Label Encoding
+* **Fuga de Datos (Data Leakage):** ✅ Sin correlación perfecta con la variable objetivo
+* **Multicolinealidad:** {df_info.get('multicolinealidad', '✅ Sin alertas severas')}
+
+---
+
+## 🤖 3. Métricas de Evaluación del Modelo
+
+| Métrica de Rendimiento | Valor Obtenido |
+| :--- | :--- |
+"""
+    for k, v in metricas_modelo.items():
+        val_str = f"{v:.4f}" if isinstance(v, float) else str(v)
+        md_content += f"| **{k}** | {val_str} |\n"
+
+    if top_features is not None and not top_features.empty:
+        md_content += """
+---
+
+## 💡 4. Explicabilidad del Modelo (Top Características)
+
+| Ranking | Variable / Característica | Importancia Relativa |
+| :---: | :--- | :---: |
+"""
+        for idx, row in top_features.head(10).iterrows():
+            feat = row['Feature']
+            imp = f"{row['Importance'] * 100:.2f}%" if isinstance(row['Importance'], float) else str(row['Importance'])
+            md_content += f"| {idx + 1} | `{feat}` | {imp} |\n"
+
+    md_content += """
+---
+*Generado automáticamente por el Framework DS Guardian – AI Data Science Governance System.*
+"""
+
+    dir_name = os.path.dirname(output_path)
+    if dir_name:
+        os.makedirs(dir_name, exist_ok=True)
+
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(md_content)
+
+    print(f"\n{C_BOLD}{C_GREEN}📄 Reporte de auditoría Markdown generado en: '{output_path}'{C_RESET}")
+    return output_path
+

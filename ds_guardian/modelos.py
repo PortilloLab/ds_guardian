@@ -161,3 +161,61 @@ def optimizar_hiperparametros(
     print(f"Mejor score ({scoring}): {search.best_score_:.4f}")
     print(f"Mejores parámetros: {search.best_params_}")
     return search.best_estimator_
+
+def graficar_importancia_caracteristicas(
+    modelo: Any,
+    feature_names: List[str],
+    top_n: int = 15,
+    save_path: Optional[str] = None
+) -> Any:
+    """
+    Calcula y grafica la importancia de las características de un modelo entrenado.
+    
+    Args:
+        modelo: Estimador entrenado que disponga de `feature_importances_` o `coef_`.
+        feature_names: Nombres de las características/columnas.
+        top_n: Número máximo de características a mostrar.
+        save_path: Ruta opcional para guardar el gráfico.
+        
+    Returns:
+        DataFrame ordenado con las características y sus importancias.
+    """
+    import pandas as pd
+    
+    if hasattr(modelo, "feature_importances_"):
+        importances = modelo.feature_importances_
+    elif hasattr(modelo, "coef_"):
+        importances = np.abs(modelo.coef_).mean(axis=0) if modelo.coef_.ndim > 1 else np.abs(modelo.coef_[0])
+    else:
+        raise ModelAuditingError("El modelo proporcionado no posee atributos 'feature_importances_' ni 'coef_'.")
+        
+    df_imp = pd.DataFrame({
+        'Feature': feature_names,
+        'Importance': importances
+    }).sort_values(by='Importance', ascending=False).reset_index(drop=True)
+    
+    df_top = df_imp.head(top_n)
+    
+    plt.figure(figsize=(8, max(4, int(top_n * 0.35))))
+    sns.barplot(data=df_top, x='Importance', y='Feature', hue='Feature', palette='Blues_r', legend=False)
+    plt.title(f'Top {min(top_n, len(df_imp))} Importancia de Características')
+    plt.xlabel('Importancia Relativa')
+    plt.ylabel('Característica / Variable')
+    plt.tight_layout()
+    
+    if save_path:
+        import os
+        dir_name = os.path.dirname(save_path)
+        if dir_name:
+            os.makedirs(dir_name, exist_ok=True)
+        plt.savefig(save_path, bbox_inches='tight', dpi=150)
+        print(f"Gráfico de importancia guardado en: {save_path}")
+        plt.close()
+    else:
+        try:
+            plt.show()
+        except Exception:
+            plt.close()
+            
+    return df_imp
+
