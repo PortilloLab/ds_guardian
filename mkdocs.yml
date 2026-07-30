@@ -1,8 +1,8 @@
 site_name: DS Guardian
 site_description: AI Framework for Robust Data Science Projects
 site_author: Jose Daniel Portillo
-repo_url: https://github.com/holahola144/ds_guardian
-repo_name: holahola144/ds_guardian
+repo_url: https://github.com/PortilloLab/ds_guardian
+repo_name: PortilloLab/ds_guardian
 
 theme:
   name: material
