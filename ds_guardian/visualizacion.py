@@ -139,38 +139,37 @@ def plot_correlacion(df: pd.DataFrame, save_path: Optional[str] = None) -> None:
         print(f"Error al graficar correlación: {e}")
 
 def plot_importancia_caracteristicas(
-    modelo, 
-    feature_names: List[str], 
-    max_features: int = 15, 
+    modelo,
+    feature_names: List[str],
+    max_features: int = 15,
     save_path: Optional[str] = None
 ) -> None:
     """
-    Grafica la importancia de características de un modelo entrenado (ej: RandomForest).
-    
+    Grafica la importancia de características de un modelo entrenado
+    (ej: RandomForest, o modelos lineales con `coef_`).
+
+    Nota: esta función es un wrapper sobre
+    `ds_guardian.modelos.graficar_importancia_caracteristicas`, que concentra
+    la lógica real de cálculo y ploteo (evita mantener dos implementaciones
+    duplicadas). Se mantiene acá por compatibilidad con el nombre documentado
+    históricamente en este módulo.
+
     Args:
-        modelo: Estimador de sklearn entrenado con atributo 'feature_importances_'.
+        modelo: Estimador de sklearn entrenado con atributo 'feature_importances_'
+            o 'coef_'.
         feature_names: Lista de nombres de las características.
         max_features: Cantidad máxima de columnas a graficar.
         save_path: Ruta de archivo opcional para guardar el gráfico.
     """
+    from .modelos import graficar_importancia_caracteristicas
+    from .exceptions import ModelAuditingError
+
     try:
-        if not hasattr(modelo, 'feature_importances_'):
-            print("El modelo no tiene el atributo 'feature_importances_'.")
-            return
-            
-        importancias = modelo.feature_importances_
-        indices = np.argsort(importancias)[::-1]
-        
-        # Tomar las top N
-        if len(indices) > max_features:
-            indices = indices[:max_features]
-            
-        plt.figure(figsize=(10, 6))
-        sns.barplot(x=importancias[indices], y=[feature_names[i] for i in indices], palette='viridis')
-        plt.title('Importancia de las Características (Top)')
-        plt.xlabel('Importancia Relativa')
-        plt.ylabel('Característica')
-        plt.tight_layout()
-        _guardar_o_mostrar(save_path)
-    except Exception as e:
+        graficar_importancia_caracteristicas(
+            modelo,
+            feature_names=feature_names,
+            top_n=max_features,
+            save_path=save_path,
+        )
+    except ModelAuditingError as e:
         print(f"Error al graficar importancia de características: {e}")

@@ -27,6 +27,25 @@ def test_acotar_outliers_iqr():
     assert df_capped['A'].max() < 100.0
     assert df_capped['A'].min() > -50.0
 
+
+def test_acotar_outliers_iqr_train_test_sin_leakage():
+    """
+    Los límites IQR deben calcularse ÚNICAMENTE con el set de train, y aplicarse
+    igual (sin recalcular) sobre el set de test, para evitar Data Leakage.
+    """
+    df_train = pd.DataFrame({'A': [10.0, 11.0, 12.0, 13.0, 14.0]})  # sin outliers en train
+    # Test tiene un valor extremo que, si contaminara el cálculo de los límites,
+    # ensancharía el rango permitido. No debe pasar: el límite se calcula solo con train.
+    df_test = pd.DataFrame({'A': [10.5, 9999.0]})
+
+    df_train_capped, df_test_capped = acotar_outliers_iqr(df_train, columnas=['A'], df_test=df_test)
+
+    # El valor extremo de test debe quedar acotado según los límites de TRAIN,
+    # no debe sobrevivir como 9999.0.
+    assert df_test_capped['A'].max() < 100.0
+    # Train no debió modificarse por la presencia de test.
+    assert df_train_capped['A'].max() == 14.0
+
 def test_dataframe_vacio_raises_error():
     with pytest.raises(DataValidationError):
         from ds_guardian.eda import resumir_datos

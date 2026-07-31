@@ -25,3 +25,15 @@ plots/
 
 # MkDocs generated site folder
 site/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.coverage
+coverage.xml
+
+# Reportes generados por los scripts de validación (son artefactos de ejecución,
+# no código fuente; se regeneran corriendo scripts/prueba_kaggle_faults.py, etc.)
+reports/*.md

@@ -18,7 +18,7 @@ def ejecutar_prueba_faults_optimizada():
     print("=" * 70)
 
     # 1. Cargar Dataset
-    filepath = "faults.csv"
+    filepath = "data/faults.csv"
     print(f"\n📂 1. Cargando dataset desde '{filepath}'...")
     df = pd.read_csv(filepath)
 
@@ -150,7 +150,7 @@ def ejecutar_prueba_faults_optimizada():
         'ROC-AUC Score (Multiclase)': roc_auc,
         'F1-Score Macro': score_f1_macro
     }
-    report_path = "reporte_auditoria_steel_faults.md"
+    report_path = "reports/reporte_auditoria_steel_faults.md"
     auditoria.generar_reporte_auditoria_markdown(
         nombre_proyecto="Kaggle Steel Plates Faults",
         df_info=df_info,

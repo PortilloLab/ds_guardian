@@ -76,9 +76,9 @@ pip install -r requirements.txt
 ## 📚 Documentación y Ejemplos
 
 * **Documentación Completa**: Puedes encontrar especificaciones detalladas en la carpeta [docs/](docs/):
-  * [Guía de Inicio Rápido (Getting Started)](docs/getting_started.md)
+  * [Guía de Inicio Rápido (Getting Started)](docs/getting-started.md)
   * [Arquitectura del Framework](docs/architecture.md)
-  * [Tutoriales de Uso](docs/tutorials.md)
+  * [Tutoriales de Uso](docs/tutorials/)
   * [Referencia de la API](docs/api.md)
   * [Preguntas Frecuentes (FAQ)](docs/faq.md)
   * [Hoja de Ruta (Roadmap)](docs/roadmap.md)
@@ -98,22 +98,24 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from ds_guardian import eda, limpieza, modelos, auditoria, configurar_estilo
 
-# 1. Cargar y optimizar
+# 1. Cargar y optimizar (la optimización de memoria no depende del split)
 df = pd.read_csv('dataset.csv')
 df = eda.optimizar_memoria(df)
-df = eda.acotar_outliers_iqr(df)
 
-# 2. Dividir antes de imputar para evitar Data Leakage
+# 2. Dividir ANTES de tratar outliers, imputar, etc. para evitar Data Leakage
 X = df.drop('target', axis=1)
 y = df['target']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# 3. Preprocesamiento aislado y seguro
+# 3. Acotar outliers: los límites (IQR) se calculan solo con train
+X_train, X_test = eda.acotar_outliers_iqr(X_train, df_test=X_test)
+
+# 4. Preprocesamiento aislado y seguro
 X_train, X_test = limpieza.imputar_nulos(X_train, X_test)
 X_train, X_test = limpieza.codificar_variables(X_train, X_test)
 X_train, X_test = limpieza.escalar_caracteristicas(X_train, X_test, metodo='standard')
 
-# 4. Auditoría QA antes de entrenar
+# 5. Auditoría QA antes de entrenar
 if auditoria.revisar_datos_finales(X_train, y=y_train):
     modelo = RandomForestClassifier(random_state=42)
     modelo.fit(X_train, y_train)

@@ -18,7 +18,7 @@ def ejecutar_prueba_kaggle():
     print("=" * 70)
 
     # 1. Carga del Dataset
-    dataset_path = "customer_churn_business_dataset.csv"
+    dataset_path = "data/customer_churn_business_dataset.csv"
     print(f"\n📂 1. Cargando dataset desde '{dataset_path}'...")
     df = pd.read_csv(dataset_path)
     print(f"   -> Filas: {df.shape[0]}, Columnas: {df.shape[1]}")

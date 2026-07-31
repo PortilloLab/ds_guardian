@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 import pandas as pd
 import numpy as np
 from .exceptions import DataValidationError
@@ -137,28 +137,48 @@ def detectar_outliers_iqr(df: pd.DataFrame) -> Dict[str, int]:
     
     return outliers_dict
 
-def acotar_outliers_iqr(df: pd.DataFrame, columnas: Optional[List[str]] = None) -> pd.DataFrame:
+def acotar_outliers_iqr(
+    df: pd.DataFrame,
+    columnas: Optional[List[str]] = None,
+    df_test: Optional[pd.DataFrame] = None,
+) -> Union[pd.DataFrame, "tuple[pd.DataFrame, pd.DataFrame]"]:
     """
     Acota los outliers en las columnas numéricas especificadas usando los límites del rango intercuartílico (IQR).
     (Capping/Winsorization). Modifica y retorna una copia del DataFrame.
+
+    IMPORTANTE (Data Leakage): si ya tenés separados train/test, pasá `df_test`
+    para que los límites (Q1/Q3) se calculen ÚNICAMENTE con `df` (tratado como
+    train) y luego se apliquen también a `df_test`, sin que las estadísticas
+    de test influyan en los límites de corte. Si llamás a esta función ANTES
+    de hacer el split (sin pasar `df_test`), los límites se calculan sobre
+    todo el dataset recibido — evitá ese patrón si el resultado se va a usar
+    para entrenar un modelo con una posterior partición train/test.
     
     Args:
-        df: DataFrame de pandas.
+        df: DataFrame de pandas. Si se pasa `df_test`, este se trata como el
+            conjunto de entrenamiento (train) y es la única fuente de los
+            límites IQR.
         columnas: Lista de columnas numéricas a acotar. Si es None, acota todas las numéricas.
+        df_test: DataFrame de test opcional. Si se provee, se acota usando los
+            mismos límites (Q1/Q3) calculados en `df`, evitando Data Leakage.
         
     Returns:
-        DataFrame con outliers acotados.
+        DataFrame con outliers acotados si `df_test` es None.
+        Tupla (df_train_capped, df_test_capped) si se provee `df_test`.
     """
     if df is None or df.empty:
-        return df
+        return (df, df_test) if df_test is not None else df
         
     df_capped = df.copy()
     if columnas is None:
         columnas = list(df_capped.select_dtypes(include=[np.number]).columns)
-        
+
+    df_test_capped = df_test.copy() if df_test is not None else None
+
     for col in columnas:
         if not pd.api.types.is_numeric_dtype(df_capped[col]):
             continue
+        # Los límites SIEMPRE se calculan solo con `df` (train), nunca con df_test.
         Q1 = df_capped[col].quantile(0.25)
         Q3 = df_capped[col].quantile(0.75)
         IQR = Q3 - Q1
@@ -167,6 +187,11 @@ def acotar_outliers_iqr(df: pd.DataFrame, columnas: Optional[List[str]] = None) 
         
         # Acotar valores fuera de los límites
         df_capped[col] = np.clip(df_capped[col], limite_inferior, limite_superior)
+
+        if df_test_capped is not None and col in df_test_capped.columns:
+            df_test_capped[col] = np.clip(df_test_capped[col], limite_inferior, limite_superior)
         
     print(f"Outliers acotados en las columnas: {columnas}")
+    if df_test_capped is not None:
+        return df_capped, df_test_capped
     return df_capped
