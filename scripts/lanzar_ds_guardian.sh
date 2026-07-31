@@ -1,10 +1,24 @@
 #!/usr/bin/env bash
 
-# Resolve project directory dynamically
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_EXEC="/home/jose/anaconda3/bin/python"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [ ! -f "$PYTHON_EXEC" ]; then
+if [ -f "$SCRIPT_DIR/pyproject.toml" ]; then
+    PROJECT_DIR="$SCRIPT_DIR"
+elif [ -f "$SCRIPT_DIR/../pyproject.toml" ]; then
+    PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+elif [ -d "/home/jose/ejer_de_phyton" ]; then
+    PROJECT_DIR="/home/jose/ejer_de_phyton"
+else
+    PROJECT_DIR="$(pwd)"
+fi
+
+if [ -f "$PROJECT_DIR/.venv/bin/python3" ]; then
+    PYTHON_EXEC="$PROJECT_DIR/.venv/bin/python3"
+elif [ -f "$PROJECT_DIR/venv/bin/python3" ]; then
+    PYTHON_EXEC="$PROJECT_DIR/venv/bin/python3"
+elif [ -f "/home/jose/anaconda3/bin/python" ]; then
+    PYTHON_EXEC="/home/jose/anaconda3/bin/python"
+else
     PYTHON_EXEC="python3"
 fi
 
