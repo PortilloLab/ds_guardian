@@ -29,10 +29,16 @@ La presencia de outliers (valores atípicos) puede distorsionar fuertemente las 
 eda.detectar_outliers_iqr(df)
 ```
 
-### Winsorization (Capping):
-En lugar de descartar filas valiosas eliminando outliers, limitamos (acotamos) los valores extremos reemplazándolos con los límites mínimo y máximo definidos por el Rango Intercuartílico:
+### Winsorization (Capping sin Data Leakage):
+En lugar de descartar filas valiosas eliminando outliers, limitamos (acotamos) los valores extremos reemplazándolos con los límites mínimo y máximo definidos por el Rango Intercuartílico.
+
+Para evitar **Data Leakage**, los límites del IQR deben calcularse exclusivamente sobre el conjunto de entrenamiento (`train`) y aplicarse al de prueba (`test`):
 
 ```python
-# Acota los valores extremos en las columnas especificadas
-df_limpio = eda.acotar_outliers_iqr(df, columnas=['Ingresos', 'Edad'])
+# Acota los valores extremos en train y test sin contaminar los límites de train
+X_train_canned, X_test_capped = eda.acotar_outliers_iqr(
+    df=X_train, 
+    columnas=['Ingresos', 'Edad'], 
+    df_test=X_test
+)
 ```

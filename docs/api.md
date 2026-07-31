@@ -18,8 +18,8 @@ Optimiza los tipos de datos de las columnas numéricas (ej. downcast a `int8` o 
 ### `detectar_outliers_iqr(df)`
 Detecta y reporta outliers en variables numéricas usando el Rango Intercuartílico (IQR).
 
-### `acotar_outliers_iqr(df, columnas=None)`
-Aplica Winsorization acotando valores extremos dentro de los límites del IQR sin eliminar filas.
+### `acotar_outliers_iqr(df, columnas=None, factor=1.5, df_test=None)`
+Aplica Winsorization acotando valores extremos dentro de los límites del IQR sin eliminar filas. Si se pasa `df_test`, los límites del IQR se calculan únicamente con `df` (train) y se aplican defensivamente sobre `df_test` evitando data leakage.
 
 ---
 
@@ -54,7 +54,7 @@ Gráfico de barras horizontales para variables categóricas.
 Heatmap de correlación lineal sobre variables numéricas.
 
 ### `plot_importancia_caracteristicas(modelo, feature_names, max_features=15, save_path=None)`
-Grafica el orden de importancia de variables del estimador.
+Grafica el orden de importancia de variables del estimador (soporta modelos basados en árboles y modelos lineales con coeficientes).
 
 ---
 
@@ -66,6 +66,9 @@ Reporte detallado de clasificación, Accuracy, ROC-AUC y heatmap de la matriz de
 ### `evaluar_regresion(y_true, y_pred)`
 Calcula e imprime MSE, RMSE, MAE y R2 Score.
 
+### `graficar_importancia_caracteristicas(modelo, feature_names, max_features=15, save_path=None)`
+Extrae y visualiza la importancia relativa de las características del modelo.
+
 ### `validacion_cruzada(modelo, X, y, cv=5, scoring='accuracy')`
 Prueba el modelo mediante K-Fold Cross Validation informando medias y desviaciones estándar.
 
@@ -76,8 +79,11 @@ Optimización aleatoria de hiperparámetros con RandomizedSearchCV.
 
 ## Módulo: `ds_guardian.auditoria`
 
-### `revisar_datos_finales(df, y=None)`
-Auditor QA que ejecuta un checklist de calidad en el dataset e informa advertencias/errores con colores en la consola.
+### `revisar_datos_finales(df, y=None, retornar_detalle=False)`
+Agente QA que ejecuta un checklist de calidad en el dataset e informa advertencias/errores con colores en la consola. Si `retornar_detalle=True`, devuelve un diccionario completo con el estado de cada validación individual.
+
+### `generar_reporte_auditoria_markdown(nombre_proyecto, df_info, resultado_auditoria, metricas_modelo, top_features=None, output_path="reporte_auditoria.md", detalle_auditoria=None)`
+Genera un informe técnico completo en formato Markdown (HTML/GitHub compatible) con los resultados de la auditoría QA, calidad de datos y evaluación del modelo.
 
 ### `registrar_y_comparar_modelo(nombre_proyecto, metrica_principal_nombre, valor_metrica, maximizar=True)`
 Guarda el desempeño del modelo en `historial_proyectos.json` y alerta si mejoró o empeoró respecto a ejecuciones previas.
