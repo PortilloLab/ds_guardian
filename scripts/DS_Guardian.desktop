@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=DS Guardian
+Comment=AI Data Science Governance System & Data Quality Auditor
+Exec=gnome-terminal -- /bin/bash -c "lanzar_ds_guardian.sh; exec bash"
+Icon=utilities-terminal
+Terminal=true
+Categories=Development;Science;
+StartupNotify=true
