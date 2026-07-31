@@ -66,9 +66,10 @@ def build_pdf_manual():
     print(f"[+] Generating PDF at: {output_pdf}")
     subprocess.run(['libreoffice', '--headless', '--convert-to', 'pdf', temp_html, '--outdir', docs_dir], check=True)
     
-    generated_temp_pdf = '/tmp/temp_ds_guardian_manual.pdf'
-    if os.path.exists(generated_temp_pdf):
-        os.rename(generated_temp_pdf, output_pdf)
+    # LibreOffice output in docs_dir is temp_ds_guardian_manual.pdf
+    converted_temp_pdf = os.path.join(docs_dir, 'temp_ds_guardian_manual.pdf')
+    if os.path.exists(converted_temp_pdf):
+        os.rename(converted_temp_pdf, output_pdf)
 
     if os.path.exists(output_pdf):
         print(f"✅ PDF Manual successfully generated: {output_pdf}")
