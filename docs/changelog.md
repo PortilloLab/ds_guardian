@@ -4,6 +4,24 @@ Todos los cambios notables realizados en el proyecto **DS Guardian** serán docu
 
 ---
 
+## [1.1.0] - 2026-07-31
+
+### Añadido
+* **Aislamiento Anti-Leakage en Winsorization**: Adición del parámetro `df_test` en `eda.acotar_outliers_iqr()` para calcular los límites del Rango Intercuartílico (IQR) exclusivamente sobre el conjunto de entrenamiento (`train`) y aplicarlos defensivamente en el conjunto de prueba (`test`).
+* **Generación de Reportes Técnicos Markdown**: Adición de `generar_reporte_auditoria_markdown()` en `auditoria.py` para exportar informes ejecutivos completos de calidad de datos y evaluación de modelos.
+* **Modo Detallado de Auditoría**: Soporte para `retornar_detalle=True` en `revisar_datos_finales()`, devolviendo un diccionario estructurado con el estado individual de cada regla QA.
+* **Visualización Unificada de Importancia de Variables**: Consolidación de `modelos.graficar_importancia_caracteristicas()`, extendiendo el soporte para estimadores lineales (vía `coef_`) además de estimadores basados en árboles (`feature_importances_`).
+* **Lanzador Interactivo de Escritorio**: Adición de `scripts/lanzar_ds_guardian.sh` y el acceso directo `DS_Guardian.desktop` con detección dinámica del entorno `.venv` y resolución automática de rutas del proyecto.
+* **Manual de Usuario en PDF**: Compilación y generación automática de `DS_Guardian_User_Manual.pdf` localizado en el Escritorio.
+
+### Modificado
+* **Severidad de Data Leakage**: Corrección en la clasificación de severidad de Data Leakage en la función de auditoría QA, marcándolo como **ERROR FATAL (Rojo)**.
+* **Ampliación de Pruebas Unitarias**: Extensión de la suite de pruebas `pytest` a 20 casos de prueba al 100% pasando sin fallos.
+* **Compatibilidad con Pandas 3/4**: Eliminación de advertencias de deprecación mediante la inclusión de `string` en `select_dtypes`.
+* **Referencia de API y Tutoriales**: Actualización completa de `docs/api.md`, `docs/tutorials/audit.md` y `docs/tutorials/eda.md`.
+
+---
+
 ## [1.0.0] - 2026-07-10
 
 ### Añadido
