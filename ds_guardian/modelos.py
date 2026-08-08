@@ -219,3 +219,77 @@ def graficar_importancia_caracteristicas(
             
     return df_imp
 
+
+def guardar_modelo_entrenado(
+    modelo: Any,
+    feature_names: List[str],
+    nombre_proyecto: str,
+    metricas: Optional[Dict[str, float]] = None,
+    output_dir: str = "models"
+) -> Dict[str, str]:
+    """
+    Guarda el modelo entrenado en formato .joblib junto con su archivo de metadatos .json
+    (columnas requeridas, fecha, métricas y versión).
+    
+    Args:
+        modelo: Estimador de scikit-learn entrenado.
+        feature_names: Lista con los nombres exactos de las columnas usadas en el entrenamiento.
+        nombre_proyecto: Nombre del dataset o proyecto.
+        metricas: Diccionario opcional con las métricas obtenidas.
+        output_dir: Carpeta de destino.
+        
+    Returns:
+        Diccionario con las rutas de los archivos generados ('model_path' y 'metadata_path').
+    """
+    import os
+    import json
+    import joblib
+    from datetime import datetime
+    import sklearn
+
+    os.makedirs(output_dir, exist_ok=True)
+    model_filename = f"{nombre_proyecto}_model.joblib"
+    metadata_filename = f"{nombre_proyecto}_metadata.json"
+    
+    model_path = os.path.join(output_dir, model_filename)
+    metadata_path = os.path.join(output_dir, metadata_filename)
+
+    # 1. Guardar binario del modelo
+    joblib.dump(modelo, model_path)
+
+    # 2. Guardar metadatos para despliegue / inferencia
+    metadata = {
+        'proyecto': nombre_proyecto,
+        'fecha_entrenamiento': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'clase_modelo': type(modelo).__name__,
+        'sklearn_version': sklearn.__version__,
+        'columnas_features': list(feature_names),
+        'cantidad_features': len(feature_names),
+        'metricas': metricas or {}
+    }
+
+    with open(metadata_path, 'w', encoding='utf-8') as f:
+        json.dump(metadata, f, indent=4, ensure_ascii=False)
+
+    print(f"📦 Modelo exportado con éxito en: '{model_path}'")
+    print(f"📄 Metadatos guardados en: '{metadata_path}'")
+    
+    return {'model_path': model_path, 'metadata_path': metadata_path}
+
+
+def cargar_modelo_entrenado(model_path: str) -> Any:
+    """
+    Carga un modelo previamente guardado en formato .joblib.
+    
+    Args:
+        model_path: Ruta al archivo .joblib.
+        
+    Returns:
+        Objeto modelo cargado listo para inferencia.
+    """
+    import joblib
+    if not os.path.exists(model_path):
+        raise ModelAuditingError(f"No existe el archivo de modelo en: '{model_path}'")
+    return joblib.load(model_path)
+
+

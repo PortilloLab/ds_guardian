@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CV - José Daniel Portillo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+        @page {
+            size: A4;
+            margin: 15mm 15mm 15mm 15mm;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: #1e293b;
+            line-height: 1.45;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+
+        /* Header Styling */
+        header {
+            border-bottom: 2.5px solid #0284c7;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 22pt;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 11pt;
+            font-weight: 600;
+            color: #0284c7;
+            margin: 0 0 8px 0;
+        }
+
+        .contact-info {
+            font-size: 9.5pt;
+            color: #475569;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .contact-info a {
+            color: #0284c7;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Section Styling */
+        section {
+            margin-bottom: 16px;
+        }
+
+        h2 {
+            font-size: 11.5pt;
+            font-weight: 700;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 1.5px solid #cbd5e1;
+            padding-bottom: 3px;
+            margin: 0 0 10px 0;
+        }
+
+        p {
+            margin: 0 0 8px 0;
+            color: #334155;
+            text-align: justify;
+        }
+
+        /* Competencias Grid */
+        .skills-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+
+        .skill-group {
+            font-size: 9.8pt;
+        }
+
+        .skill-group strong {
+            color: #0f172a;
+        }
+
+        /* Experiencia & Proyectos */
+        .item {
+            margin-bottom: 12px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2px;
+        }
+
+        .item-title {
+            font-size: 11pt;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .item-company {
+            font-size: 10pt;
+            font-weight: 600;
+            color: #0284c7;
+        }
+
+        .item-date {
+            font-size: 9.5pt;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        ul {
+            margin: 4px 0 0 0;
+            padding-left: 18px;
+        }
+
+        li {
+            margin-bottom: 4px;
+            color: #334155;
+            font-size: 9.8pt;
+        }
+
+        li strong {
+            color: #0f172a;
+        }
+
+        .project-link {
+            color: #0284c7;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* Printable tweaks */
+        @media print {
+            body {
+                background: none;
+            }
+            .item {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>JOSÉ DANIEL PORTILLO</h1>
+        <div class="subtitle">Especialista en Automatización IT | Gobierno de Datos & IA | Administración de Sistemas</div>
+        <div class="contact-info">
+            <span>📍 Posadas, Misiones, Argentina</span>
+            <span>✉️ jsdnlportillo@gmail.com</span>
+            <span>🔗 <a href="https://github.com/PortilloLab">github.com/PortilloLab</a></span>
+            <span>🔗 <a href="https://www.linkedin.com/in/jose-daniel-portillo">linkedin.com/in/jose-daniel-portillo</a></span>
+        </div>
+    </header>
+
+    <section>
+        <h2>🎯 RESUMEN PROFESIONAL</h2>
+        <p>
+            Técnico Especialista en Sistemas de Computación, Automatización de TI y Ciencia de Datos con amplia trayectoria combinando la administración de infraestructura, el soporte técnico preventivo (MSP) y la enseñanza en educación técnica. Creador de los frameworks de código abierto <strong>ITAT (IT Automation Toolkit)</strong> y <strong>DS Guardian (Data Governance & QA System)</strong>. Experto en desarrollo de scripts en Python/Bash, gestión de bases de datos relacionales (SQL), configuración de redes LAN/VPNs, servidores Linux/Windows y modelos predictivos de Machine Learning. Sólida capacidad de comunicación técnica, liderazgo pedagógico y elaboración de documentación ejecutiva.
+        </p>
+    </section>
+
+    <section>
+        <h2>💻 COMPETENCIAS TÉCNICAS</h2>
+        <div class="skills-container">
+            <div class="skill-group">
+                <strong>Lenguajes de Programación & Scripting:</strong> Python 3, PHP 8, Bash Scripting, SQL, JavaScript (Vanilla), HTML5/CSS3.
+            </div>
+            <div class="skill-group">
+                <strong>Sistemas Operativos & Infraestructura:</strong> Linux (Ubuntu/Debian Server), Windows Server, Docker, Nginx, Redes LAN, Cableado Estructurado, Firewalls, VPNs.
+            </div>
+            <div class="skill-group">
+                <strong>Ciencia de Datos & Inteligencia Artificial:</strong> Machine Learning (Scikit-Learn), Pandas, NumPy, Visualización de Datos (Power BI, Matplotlib, Seaborn), Gobierno de Datos (QA, Prevención de Data Leakage, Outliers IQR).
+            </div>
+            <div class="skill-group">
+                <strong>Herramientas & Entornos:</strong> Git / GitHub, VS Code, MkDocs, SQLite, PostgreSQL, MySQL.
+            </div>
+            <div class="skill-group">
+                <strong>Habilidades Blandas & Gestión:</strong> Capacitación Técnica, Liderazgo Docente, Gestión de Tickets Helpdesk (SLA), Redacción de Documentación de Ingeniería.
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>💼 EXPERIENCIA PROFESIONAL</h2>
+
+        <div class="item">
+            <div class="item-header">
+                <div>
+                    <span class="item-title">Fundador & Especialista en Sistemas e IA/Datos</span> 
+                    <span class="item-company">| Soluciones Informáticas JD & PortilloLab</span>
+                </div>
+                <span class="item-date">2023 – Presente</span>
+            </div>
+            <ul>
+                <li><strong>Automatización de TI:</strong> Arquitectura y desarrollo de <strong>ITAT (IT Automation Toolkit)</strong>, framework en Python para diagnóstico en tiempo real, monitoreo 24/7 y autoreparación de servicios críticos (MySQL, Nginx, Docker, Power BI Gateway).</li>
+                <li><strong>Gobierno de Datos & QA:</strong> Creación del sistema <strong>DS Guardian</strong>, aplicando técnicas avanzadas de prevención de <em>Data Leakage</em>, acotamiento de <em>outliers</em> mediante método IQR y generación de reportes de auditoría en PDF/Markdown.</li>
+                <li><strong>Desarrollo Web & MSP:</strong> Implementación del portal comercial y tablero de control para clientes con arquitectura PHP 8, PostgreSQL y AJAX con autenticación CLI segura.</li>
+                <li><strong>Soporte de Infraestructura:</strong> Mantenimiento preventivo y correctivo de servidores, optimización de recursos de hardware y gestión del ciclo de vida de tickets de soporte técnico.</li>
+            </ul>
+        </div>
+
+        <div class="item">
+            <div class="item-header">
+                <div>
+                    <span class="item-title">Profesor / Instructor de Educación Técnico Profesional (ETP)</span> 
+                    <span class="item-company">| Red de Escuelas Técnicas & Espacios Maker</span>
+                </div>
+                <span class="item-date">2021 – Presente</span>
+            </div>
+            <ul>
+                <li><strong>Facilitador de Robótica & Tecnología STEM (2021-2022):</strong> Formación presencial en trayectos Maker sobre microcontroladores (Arduino/ESP), electrónica, sensores y lógica de programación aplicada a proyectos IoT.</li>
+                <li><strong>Docencia Técnica:</strong> Impartición de programas sobre arquitectura de computadoras, redes LAN, lógica de algoritmos y mantenimiento de equipos informáticos en diversos niveles educativos.</li>
+                <li><strong>Mentoría & Documentación:</strong> Elaboración de guías prácticas de laboratorio, programas analíticos y capacitación en trabajo colaborativo mediante metodología Aprendizaje Basado en Proyectos (ABP).</li>
+            </ul>
+        </div>
+
+        <div class="item">
+            <div class="item-header">
+                <div>
+                    <span class="item-title">Técnico en Soporte de Infraestructura & Redes</span> 
+                    <span class="item-company">| Servicio Técnico Informático Independiente</span>
+                </div>
+                <span class="item-date">Feb 2011 – Feb 2013</span>
+            </div>
+            <ul>
+                <li><strong>Microinformática & Hardware:</strong> Diagnóstico a nivel de componente, armado, reparación y optimización de computadoras de escritorio (PCs), Notebooks, Netbooks y sistemas All-in-One.</li>
+                <li><strong>Despliegue de Redes LAN:</strong> Diseño, cableado estructurado e implementación de redes de área local cableadas e inalámbricas para viviendas y PyMEs comerciales.</li>
+                <li><strong>Seguridad & Datos:</strong> Instalación/configuración de sistemas operativos (Windows/Linux), desinfección de malware, respaldo de datos y atención directa al cliente.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>🎓 EDUCACIÓN Y FORMACIÓN ACADÉMICA</h2>
+        <div class="item">
+            <div class="item-header">
+                <span class="item-title">Diplomatura en Ciencia de Datos & Análisis Avanzado de Datos</span>
+                <span class="item-date">2024</span>
+            </div>
+            <div class="item-company">Universidad Tecnológica Nacional (UTN-BA)</div>
+        </div>
+        <div class="item" style="margin-top: 4px;">
+            <div class="item-header">
+                <span class="item-title">Técnico en Informática / Sistemas de Computación</span>
+            </div>
+            <div class="item-company">Educación Técnico Profesional (ETP)</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>🏆 PROYECTOS DE CÓDIGO ABIERTO & PUBLICACIONES</h2>
+        <ul>
+            <li>🤖 <strong>ITAT (IT Automation Toolkit):</strong> Toolkit profesional en Python para diagnóstico, auditoría de inventario y autoreparación de servicios IT. <a class="project-link" href="https://github.com/PortilloLab/it-automation-toolkit">github.com/PortilloLab/it-automation-toolkit</a></li>
+            <li>🛡️ <strong>DS Guardian:</strong> Sistema de control de calidad de datos y auditoría automatizada para Machine Learning. <a class="project-link" href="https://github.com/PortilloLab/ds_guardian">github.com/PortilloLab/ds_guardian</a></li>
+            <li>🌐 <strong>Soluciones Informáticas JD:</strong> Plataforma web MSP para gestión de clientes y servicios. <a class="project-link" href="https://github.com/PortilloLab/Soluciones_JD_1">github.com/PortilloLab/Soluciones_JD_1</a></li>
+        </ul>
+    </section>
+
+</body>
+</html>

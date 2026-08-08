@@ -328,3 +328,185 @@ def generar_reporte_auditoria_markdown(
     print(f"\n{C_BOLD}{C_GREEN}📄 Reporte de auditoría Markdown generado en: '{output_path}'{C_RESET}")
     return output_path
 
+
+def generar_reporte_auditoria_html(
+    nombre_proyecto: str,
+    df_info: Dict[str, Any],
+    resultado_auditoria: bool,
+    metricas_modelo: Dict[str, float],
+    top_features: Optional[pd.DataFrame] = None,
+    output_path: str = "reportes/reporte_auditoria.html"
+) -> str:
+    """
+    Genera un informe interactivo y estilizado en formato HTML con diseño oscuro / glassmorphic,
+    tarjetas de métricas, diagnóstico QA y explicabilidad.
+    
+    Args:
+        nombre_proyecto: Nombre del proyecto o dataset.
+        df_info: Métricas descriptivas (filas, columnas, nulos, memoria).
+        resultado_auditoria: Resultado booleano de la auditoría.
+        metricas_modelo: Diccionario con los scores de rendimiento.
+        top_features: DataFrame con el top de características importantes.
+        output_path: Ruta de salida del archivo HTML.
+        
+    Returns:
+        Ruta del archivo HTML generado.
+    """
+    fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    badge_estado = '<span style="background-color: #2e7d32; color: #fff; padding: 6px 16px; border-radius: 20px; font-weight: bold;">✅ APROBADO PARA PRODUCCIÓN</span>' if resultado_auditoria else '<span style="background-color: #c62828; color: #fff; padding: 6px 16px; border-radius: 20px; font-weight: bold;">❌ RECHAZADO (Advertencias/Errores)</span>'
+
+    metrics_cards_html = ""
+    for k, v in metricas_modelo.items():
+        val_str = f"{v:.4f}" if isinstance(v, float) else str(v)
+        metrics_cards_html += f"""
+        <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; text-align: center; flex: 1; min-width: 150px;">
+            <div style="font-size: 0.9em; color: #a0aec0; margin-bottom: 8px;">{k}</div>
+            <div style="font-size: 1.8em; font-weight: bold; color: #63b3ed;">{val_str}</div>
+        </div>
+        """
+
+    features_rows_html = ""
+    if top_features is not None and not top_features.empty:
+        for idx, row in top_features.head(10).iterrows():
+            feat = row['Feature']
+            imp = f"{row['Importance'] * 100:.2f}%" if isinstance(row['Importance'], float) else str(row['Importance'])
+            pct_val = row['Importance'] * 100 if isinstance(row['Importance'], float) else 0
+            features_rows_html += f"""
+            <tr>
+                <td style="padding: 12px; text-align: center; font-weight: bold; color: #cbd5e0;">{idx + 1}</td>
+                <td style="padding: 12px; color: #e2e8f0; font-family: monospace;">{feat}</td>
+                <td style="padding: 12px; text-align: right; color: #63b3ed; font-weight: bold;">{imp}</td>
+                <td style="padding: 12px; width: 40%;">
+                    <div style="background: #2d3748; border-radius: 6px; overflow: hidden; height: 10px;">
+                        <div style="background: linear-gradient(90deg, #3182ce, #63b3ed); width: {min(100, max(5, pct_val))}%; height: 100%;"></div>
+                    </div>
+                </td>
+            </tr>
+            """
+
+    html_content = f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS Guardian - Reporte de Auditoría: {nombre_proyecto}</title>
+    <style>
+        body {{
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+            padding: 40px 20px;
+        }}
+        .container {{
+            max-width: 900px;
+            margin: 0 auto;
+            background: #1e293b;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            padding: 32px;
+            border: 1px solid #334155;
+        }}
+        h1 {{
+            color: #38bdf8;
+            font-size: 2em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }}
+        .subtitle {{
+            color: #94a3b8;
+            font-size: 0.95em;
+            margin-bottom: 24px;
+        }}
+        .grid {{
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }}
+        .section {{
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 28px;
+            border: 1px solid #334155;
+        }}
+        h2 {{
+            color: #f1f5f9;
+            font-size: 1.3em;
+            margin-top: 0;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 12px;
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+        }}
+        th {{
+            background: #1e293b;
+            color: #94a3b8;
+            text-align: left;
+            padding: 12px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+        }}
+        tr:nth-child(even) {{ background: rgba(255, 255, 255, 0.02); }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ DS Guardian Governance Report</h1>
+        <div class="subtitle">Proyecto: <strong>{nombre_proyecto}</strong> | Generado: {fecha}</div>
+        
+        <div style="margin-bottom: 28px;">
+            {badge_estado}
+        </div>
+
+        <div class="section">
+            <h2>📊 Resumen de Estructura de Datos</h2>
+            <div class="grid">
+                <div style="flex: 1; background: #1e293b; padding: 16px; border-radius: 8px; text-align: center;">
+                    <div style="color: #94a3b8; font-size: 0.85em;">Total Filas</div>
+                    <div style="font-size: 1.5em; font-weight: bold; color: #f8fafc;">{df_info.get('filas', 'N/A')}</div>
+                </div>
+                <div style="flex: 1; background: #1e293b; padding: 16px; border-radius: 8px; text-align: center;">
+                    <div style="color: #94a3b8; font-size: 0.85em;">Total Columnas</div>
+                    <div style="font-size: 1.5em; font-weight: bold; color: #f8fafc;">{df_info.get('columnas', 'N/A')}</div>
+                </div>
+                <div style="flex: 1; background: #1e293b; padding: 16px; border-radius: 8px; text-align: center;">
+                    <div style="color: #94a3b8; font-size: 0.85em;">Uso de RAM</div>
+                    <div style="font-size: 1.5em; font-weight: bold; color: #f8fafc;">{df_info.get('memoria_mb', 'N/A')} MB</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🤖 Métricas de Evaluación de Modelo</h2>
+            <div class="grid">
+                {metrics_cards_html}
+            </div>
+        </div>
+
+        {"<div class='section'><h2>💡 Explicabilidad del Modelo (Top Features)</h2><table><thead><tr><th>#</th><th>Característica</th><th style='text-align: right;'>Importancia</th><th>Visualización</th></tr></thead><tbody>" + features_rows_html + "</tbody></table></div>" if features_rows_html else ""}
+
+        <div style="text-align: center; color: #64748b; font-size: 0.85em; margin-top: 32px;">
+            Generado automáticamente por <strong>DS Guardian - AI Governance System</strong>.
+        </div>
+    </div>
+</body>
+</html>
+"""
+
+    dir_name = os.path.dirname(output_path)
+    if dir_name:
+        os.makedirs(dir_name, exist_ok=True)
+
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(html_content)
+
+    print(f"{C_BOLD}{C_GREEN}🌐 Reporte interactivo HTML generado en: '{output_path}'{C_RESET}")
+    return output_path
+
+

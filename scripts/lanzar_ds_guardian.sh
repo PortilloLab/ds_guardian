@@ -25,26 +25,26 @@ export PYTHONPATH="$PROJECT_DIR:$PYTHONPATH"
 echo "============================================================"
 echo "         🛡️ DS GUARDIAN - AI DATA GOVERNANCE SYSTEM"
 echo "============================================================"
-echo " [1] Run Data Quality & Audit Report (Generar Reporte Markdown)"
-echo " [2] Run Robust Stress Test (Prueba Robusta de Integridad)"
-echo " [3] Run Kaggle Steel Faults Audit Test"
-echo " [4] Run Full Unit Test Suite (Pytest)"
+echo " [1] Auditar cualquier Dataset (Cargar desde Descargas / Ruta)"
+echo " [2] Generar Reporte de Auditoría (Markdown)"
+echo " [3] Ejecutar Prueba de Estrés e Integridad (Kaggle Datasets)"
+echo " [4] Ejecutar Suite de Tests Unitarios (Pytest)"
 echo " [5] Exit / Salir"
 echo "============================================================"
 read -rp "Select an option / Seleccione una opción [1-5]: " choice
 
 case "$choice" in
     1)
+        echo -e "\n[+] Iniciando módulo de auditoría de datasets personalizados..."
+        "$PYTHON_EXEC" "$PROJECT_DIR/scripts/auditar_custom_dataset.py"
+        ;;
+    2)
         echo -e "\n[+] Running Data Quality & Audit Generator..."
         "$PYTHON_EXEC" "$PROJECT_DIR/scripts/generate_report.py"
         ;;
-    2)
-        echo -e "\n[+] Running Robustness & Stress Test..."
-        "$PYTHON_EXEC" "$PROJECT_DIR/scripts/prueba_robusta.py"
-        ;;
     3)
-        echo -e "\n[+] Running Kaggle Steel Faults Audit..."
-        "$PYTHON_EXEC" "$PROJECT_DIR/scripts/prueba_kaggle_faults.py"
+        echo -e "\n[+] Running Kaggle Faults & Churn Audit..."
+        "$PYTHON_EXEC" "$PROJECT_DIR/scripts/prueba_kaggle_churn.py"
         ;;
     4)
         echo -e "\n[+] Running Pytest Unit Test Suite..."

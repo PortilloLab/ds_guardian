@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Any
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -173,3 +173,45 @@ def plot_importancia_caracteristicas(
         )
     except ModelAuditingError as e:
         print(f"Error al graficar importancia de características: {e}")
+
+
+def plot_curva_roc(
+    y_true: Any,
+    y_prob: Any,
+    save_path: Optional[str] = None
+) -> None:
+    """
+    Grafica la curva ROC (Receiver Operating Characteristic) y calcula el área bajo la curva (AUC).
+    
+    Args:
+        y_true: Valores reales (ground truth).
+        y_prob: Probabilidades predichas por el modelo para la clase positiva.
+        save_path: Ruta de archivo opcional para guardar la imagen de la curva ROC.
+    """
+    from sklearn.metrics import roc_curve, roc_auc_score
+
+    try:
+        y_true_arr = np.array(y_true)
+        y_prob_arr = np.array(y_prob)
+
+        if len(y_prob_arr.shape) > 1 and y_prob_arr.shape[1] == 2:
+            y_prob_arr = y_prob_arr[:, 1]
+
+        fpr, tpr, _ = roc_curve(y_true_arr, y_prob_arr)
+        auc_score = roc_auc_score(y_true_arr, y_prob_arr)
+
+        plt.figure(figsize=(7, 5))
+        plt.plot(fpr, tpr, color='#007acc', lw=2.5, label=f'Curva ROC (AUC = {auc_score:.4f})')
+        plt.plot([0, 1], [0, 1], color='#888888', lw=1.5, linestyle='--', label='Azar (AUC = 0.50)')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('Tasa de Falsos Positivos (FPR)')
+        plt.ylabel('Tasa de Verdaderos Positivos (TPR / Recall)')
+        plt.title('Curva ROC - Evaluación de Clasificación')
+        plt.legend(loc="lower right")
+        plt.tight_layout()
+
+        _guardar_o_mostrar(save_path)
+    except Exception as e:
+        print(f"Advertencia: No se pudo graficar la curva ROC: {e}")
+
