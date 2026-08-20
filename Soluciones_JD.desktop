@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=Soluciones Informática JD
-Comment=Portal Web y Sistema de Soporte ITSM
-Exec=/home/jose/ejer_de_phyton/abrir_soluciones_jd.sh
-Icon=/home/jose/Development/PortilloLab/Soluciones_JD_1/logo_jd.png
-Terminal=false
-Categories=Network;Development;
