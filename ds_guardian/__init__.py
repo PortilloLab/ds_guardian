@@ -4,6 +4,8 @@ from .preprocessing.encoding import codificar_variables
 from .preprocessing.scaling import escalar_caracteristicas
 from .auditoria.quality import revisar_datos_finales
 from .auditoria.history import registrar_y_comparar_modelo
+from .auditoria.reporter import generar_reporte_html, generar_reporte_markdown
+from .modelos import evaluar_clasificacion, evaluar_regresion, optimizar_hiperparametros, exportar_modelo
 from .sklearn.transformers import SafeImputerTransformer, SafeScalerTransformer
 
 __version__ = "1.0.0"
@@ -17,6 +19,12 @@ __all__ = [
     "escalar_caracteristicas",
     "revisar_datos_finales",
     "registrar_y_comparar_modelo",
+    "generar_reporte_html",
+    "generar_reporte_markdown",
+    "evaluar_clasificacion",
+    "evaluar_regresion",
+    "optimizar_hiperparametros",
+    "exportar_modelo",
     "SafeImputerTransformer",
     "SafeScalerTransformer",
     "DataValidationError",

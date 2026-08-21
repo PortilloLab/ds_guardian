@@ -1,7 +1,8 @@
 import logging
 import sys
+import json
+from datetime import datetime
 
-# Códigos de color ANSI para consola interactiva
 C_GREEN = '[92m'
 C_RED = '[91m'
 C_YELLOW = '[93m'
@@ -21,11 +22,24 @@ class ANSIFormatter(logging.Formatter):
             prefix = ""
         return f"{prefix}{super().format(record)}"
 
-def get_logger(name: str = "ds_guardian") -> logging.Logger:
+class JSONFormatter(logging.Formatter):
+    def format(self, record):
+        log_obj = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "level": record.levelname,
+            "module": record.module,
+            "message": record.getMessage()
+        }
+        return json.dumps(log_obj)
+
+def get_logger(name: str = "ds_guardian", json_format: bool = False) -> logging.Logger:
     logger = logging.getLogger(name)
     if not logger.handlers:
         logger.setLevel(logging.INFO)
         handler = logging.StreamHandler(sys.stdout)
-        handler.setFormatter(ANSIFormatter('%(message)s'))
+        if json_format:
+            handler.setFormatter(JSONFormatter())
+        else:
+            handler.setFormatter(ANSIFormatter('%(message)s'))
         logger.addHandler(handler)
     return logger

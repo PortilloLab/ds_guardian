@@ -3,13 +3,13 @@ class DSGuardianError(Exception):
     pass
 
 class DataValidationError(DSGuardianError):
-    """Excepción lanzada cuando los datos de entrada son inválidos, están vacíos o no cumplen con los tipos esperados."""
+    """Excepción lanzada cuando los datos de entrada son inválidos o no cumplen los tipos esperados."""
     pass
 
 class DataLeakageError(DSGuardianError):
-    """Excepción de alta severidad lanzada cuando se detecta fuga de datos (Data Leakage) entre Train/Test o Target."""
+    """Excepción lanzada cuando se detecta fuga de datos (Data Leakage)."""
     pass
 
 class ImbalanceWarning(UserWarning):
-    """Advertencia de desbalance severo de clases en la variable objetivo."""
+    """Advertencia de desbalance severo de clases."""
     pass
