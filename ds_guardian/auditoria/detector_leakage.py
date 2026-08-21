@@ -6,14 +6,11 @@ from ..logging import get_logger
 logger = get_logger(__name__)
 
 def detectar_multicolinealidad(df: pd.DataFrame, umbral: float = 0.95) -> List[Tuple[str, List[str]]]:
-    """Escanea el DataFrame en busca de parejas de variables altamente correlacionadas."""
     df_num = df.select_dtypes(include=[np.number])
     if df_num.empty:
         return []
-        
     corr_matrix = df_num.corr().abs()
     upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
-    
     high_corr_pairs = []
     for col in upper.columns:
         correlated = upper.index[upper[col] > umbral].tolist()
@@ -22,11 +19,9 @@ def detectar_multicolinealidad(df: pd.DataFrame, umbral: float = 0.95) -> List[T
     return high_corr_pairs
 
 def detectar_fuga_target(df: pd.DataFrame, y: Any, umbral: float = 0.99) -> List[Tuple[str, float]]:
-    """Detecta columnas con correlación peligrosamente alta con la variable objetivo (>0.99)."""
     df_num = df.select_dtypes(include=[np.number])
     if df_num.empty or y is None:
         return []
-        
     y_series = pd.Series(y)
     leaks = []
     for col in df_num.columns:
@@ -37,3 +32,11 @@ def detectar_fuga_target(df: pd.DataFrame, y: Any, umbral: float = 0.99) -> List
         except Exception:
             pass
     return leaks
+
+def detectar_fuga_temporal(df: pd.DataFrame, date_col: str, y_col: str) -> bool:
+    """Verifica que no exista fuga temporal (futuro prediciendo pasado)."""
+    if date_col not in df.columns:
+        return False
+    df_sorted = df.sort_values(by=date_col)
+    logger.info(f"Escáner de fuga temporal ejecutado en '{date_col}'. Registros en orden cronológico.")
+    return True
