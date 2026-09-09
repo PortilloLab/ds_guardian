@@ -10,7 +10,28 @@
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Linter](https://img.shields.io/badge/linter-ruff-red.svg)](https://github.com/astral-sh/ruff)
 
-**DS Guardian** es un framework de software y agente auditor en Python concebido para blindar proyectos de Ciencia de Datos y Machine Learning. Proporciona utilidades para el preprocesamiento limpio de datos, análisis exploratorio (EDA), visualización premium y sintonización de hiperparámetros, previniendo errores habituales en producción como el **Data Leakage (Fuga de Datos)**, la inconsistencia de variables categóricas, valores nulos residuales y desbalances.
+# DS Guardian v1.0.0
+
+Primera versión pública de DS Guardian, un framework orientado a la auditoría, limpieza y gobernanza de proyectos de ciencia de datos y machine learning.
+
+## ¿Qué incluye?
+- Auditoría automática de calidad de datos
+- Detección de nulos, outliers y multicolinealidad
+- Validación de fugas de información (data leakage)
+- Limpieza y preprocesamiento seguro
+- Codificación, imputación y escalado de variables
+- Exploratory Data Analysis para entornos de producción
+- Visualización de distribuciones y correlaciones
+- Evaluación de modelos de clasificación y regresión
+- Exportación de modelos y metadatos
+- Reportes Markdown y HTML de auditoría
+
+## Propósito
+DS Guardian ayuda a reducir errores frecuentes en pipelines analíticos, reforzar buenas prácticas ML y mejorar la trazabilidad y confiabilidad de proyectos de datos.
+
+## Instalación
+```bash
+pip install ds-guardian==1.0.0
 
 ---
 
