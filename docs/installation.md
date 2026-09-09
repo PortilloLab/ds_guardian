@@ -21,7 +21,7 @@ Para descargar, instalar el framework e iniciar la documentación local en un en
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/holahola144/ds_guardian.git
+git clone https://github.com/PortilloLab/ds_guardian.git
 
 # 2. Entrar a la carpeta del proyecto
 cd ds_guardian

@@ -21,7 +21,7 @@ df_optimizado = eda.optimizar_memoria(df)
 
 ## 2. Detección y Tratamiento de Outliers (Winsorization)
 
-La presencia de outliers (valores atípicos) puede distorsionar fuertemente las predicciones de los modelos basados en distancias (como regresión lineal o SVM).
+La presencia de outliers (valores atípicos) puede distorsionar fuertemente las predicciones de los modelos basados en distancias, como la regresión lineal o las SVM.
 
 ### Detección con el Rango Intercuartílico (IQR):
 ```python
@@ -30,7 +30,7 @@ eda.detectar_outliers_iqr(df)
 ```
 
 ### Winsorization (Capping sin Data Leakage):
-En lugar de descartar filas valiosas eliminando outliers, limitamos (acotamos) los valores extremos reemplazándolos con los límites mínimo y máximo definidos por el Rango Intercuartílico.
+En lugar de descartar filas valiosas, limitamos los valores extremos reemplazándolos por los límites mínimo y máximo definidos por el rango intercuartílico (IQR).
 
 Para evitar **Data Leakage**, los límites del IQR deben calcularse exclusivamente sobre el conjunto de entrenamiento (`train`) y aplicarse al de prueba (`test`):
 

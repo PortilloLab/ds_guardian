@@ -1,6 +1,6 @@
 # Tutorial: Limpieza Segura (Cleaning)
 
-El módulo `ds_guardian.limpieza` se encarga de preparar los datos numéricos y categóricos para que el estimador no falle, asegurando un aislamiento total entre entrenamiento y validación.
+El módulo `ds_guardian.limpieza` prepara los datos numéricos y categóricos para que el estimador no falle, asegurando un aislamiento total entre entrenamiento y validación.
 
 ## 1. Imputación de Valores Faltantes (Nulos)
 

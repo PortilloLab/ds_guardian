@@ -1,6 +1,6 @@
 # DS Guardian
 
-DS Guardian es un framework de código abierto en Python diseñado para ayudar a los profesionales de la Ciencia de Datos a construir flujos de trabajo de Machine Learning más robustos, reproducibles y confiables. Se enfoca en prevenir errores comunes como la fuga de datos (*data leakage*), manejar conjuntos de datos del mundo real y proporcionar verificaciones de calidad automatizadas antes del entrenamiento del modelo.
+DS Guardian es un framework de código abierto en Python diseñado para ayudar a los profesionales de la Ciencia de Datos a construir flujos de trabajo de Machine Learning más robustos, reproducibles y confiables. Se enfoca en prevenir errores comunes como la fuga de datos (*data leakage*), manejar conjuntos de datos del mundo real y proporcionar verificaciones de calidad automatizadas antes de entrenar el modelo.
 
 ---
 
@@ -16,7 +16,7 @@ Este proyecto nació de una necesidad real observada en el desarrollo y enseñan
 
 ## 🛠️ Filosofía de Funcionamiento
 
-DS Guardian actúa como una capa de auditoría y control de calidad entre la ingesta de datos y el entrenamiento del modelo:
+DS Guardian actúa como una capa de auditoría y control de calidad entre la ingesta de datos y la fase de modelado:
 
 ```mermaid
 graph LR
