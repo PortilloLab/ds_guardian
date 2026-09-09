@@ -64,12 +64,18 @@ def tratar_duplicados(df: pd.DataFrame) -> pd.DataFrame:
         return df.drop_duplicates().reset_index(drop=True)
     return df
 
-def acotar_outliers_iqr(df: pd.DataFrame, columnas: Optional[List[str]] = None, factor: float = 1.5) -> pd.DataFrame:
+def acotar_outliers_iqr(
+    df: pd.DataFrame,
+    columnas: Optional[List[str]] = None,
+    factor: float = 1.5,
+    df_test: Optional[pd.DataFrame] = None,
+) -> Union[pd.DataFrame, Tuple[pd.DataFrame, pd.DataFrame]]:
     if df is None or df.empty:
         raise DataValidationError("El DataFrame está vacío.")
     df_clean = df.copy()
     if columnas is None:
         columnas = list(df_clean.select_dtypes(include=[np.number]).columns)
+    bounds = {}
     for col in columnas:
         if col in df_clean.columns and np.issubdtype(df_clean[col].dtype, np.number):
             Q1 = df_clean[col].quantile(0.25)
@@ -77,5 +83,17 @@ def acotar_outliers_iqr(df: pd.DataFrame, columnas: Optional[List[str]] = None, 
             IQR = Q3 - Q1
             lower_bound = Q1 - factor * IQR
             upper_bound = Q3 + factor * IQR
+            bounds[col] = (lower_bound, upper_bound)
             df_clean[col] = np.clip(df_clean[col], lower_bound, upper_bound)
+    if df_test is not None:
+        if df_test.empty:
+            raise DataValidationError("El DataFrame de prueba (test) está vacío.")
+        missing_cols = [col for col in columnas if col not in df_test.columns]
+        if missing_cols:
+            raise DataValidationError(f"Las columnas indicadas para acotar outliers faltan en df_test: {missing_cols}")
+        df_test_clean = df_test.copy()
+        for col, (lower_bound, upper_bound) in bounds.items():
+            if col in df_test_clean.columns:
+                df_test_clean[col] = np.clip(df_test_clean[col], lower_bound, upper_bound)
+        return df_clean, df_test_clean
     return df_clean

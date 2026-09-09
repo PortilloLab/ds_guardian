@@ -10,6 +10,10 @@ class DataLeakageError(DSGuardianError):
     """Excepción lanzada cuando se detecta fuga de datos (Data Leakage)."""
     pass
 
+class ModelAuditingError(DSGuardianError):
+    """Excepción lanzada cuando la auditoría o validación del modelo falla."""
+    pass
+
 class ImbalanceWarning(UserWarning):
     """Advertencia de desbalance severo de clases."""
     pass
