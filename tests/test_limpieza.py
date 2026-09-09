@@ -2,6 +2,7 @@ import pytest
 import pandas as pd
 import numpy as np
 from ds_guardian.limpieza import imputar_nulos, tratar_duplicados, codificar_variables, escalar_caracteristicas
+from ds_guardian.exceptions import DataValidationError
 
 def test_imputar_nulos_sin_leakage():
     df_train = pd.DataFrame({'A': [1.0, 2.0, np.nan]})
@@ -33,3 +34,18 @@ def test_escalar_caracteristicas():
     df_train_scaled = escalar_caracteristicas(df_train, metodo='minmax')
     assert df_train_scaled['Val'].min() == 0.0
     assert df_train_scaled['Val'].max() == 1.0
+
+
+def test_imputar_nulos_rechaza_columnas_faltantes_en_test():
+    df_train = pd.DataFrame({'A': [1.0, 2.0, np.nan]})
+    df_test = pd.DataFrame({'B': [1.0, 2.0]})
+
+    with pytest.raises(DataValidationError, match='faltan en df_test|No coinciden'):
+        imputar_nulos(df_train, df_test)
+
+
+def test_escalar_caracteristicas_rechaza_columnas_inexistentes():
+    df_train = pd.DataFrame({'Val': [10.0, 20.0, 30.0]})
+
+    with pytest.raises(DataValidationError, match='No existe|columnas'):
+        escalar_caracteristicas(df_train, columnas=['NoExiste'])

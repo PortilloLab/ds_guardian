@@ -1,7 +1,9 @@
 import pytest
+from pathlib import Path
 import pandas as pd
 import numpy as np
-from ds_guardian.auditoria import revisar_datos_finales
+import ds_guardian
+from ds_guardian.auditoria import revisar_datos_finales, registrar_y_comparar_modelo
 from ds_guardian.exceptions import DataValidationError
 
 def test_revisar_datos_finales_con_nulos():
@@ -99,5 +101,25 @@ def test_reporte_markdown_no_miente_sobre_leakage_real():
         import os
         if os.path.exists(output_path):
             os.remove(output_path)
+
+
+def test_public_api_exports_expected_objects():
+    assert "revisar_datos_finales" in ds_guardian.__all__
+    assert "optimizar_memoria" in ds_guardian.__all__
+    assert "registrar_y_comparar_modelo" in ds_guardian.__all__
+    assert ds_guardian.__version__ == "1.0.0"
+
+
+def test_registrar_y_comparar_modelo_usa_ruta_del_proyecto(monkeypatch, tmp_path):
+    project_root = Path(__file__).resolve().parents[1]
+    historial_path = project_root / "historial_proyectos.json"
+    if historial_path.exists():
+        historial_path.unlink()
+
+    monkeypatch.chdir(tmp_path)
+    registrar_y_comparar_modelo("path_project", "Accuracy", 0.82)
+
+    assert historial_path.exists()
+    assert not (tmp_path / "historial_proyectos.json").exists()
 
 

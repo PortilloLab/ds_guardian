@@ -44,4 +44,15 @@ dev = [
 [project.urls]
 Homepage = "https://github.com/PortilloLab/ds_guardian"
 Repository = "https://github.com/PortilloLab/ds_guardian"
+<<<<<<< HEAD
 Issues = "https://github.com/PortilloLab/ds_guardian/issues"
+=======
+Documentation = "https://github.com/PortilloLab/ds_guardian/tree/main/docs"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.setuptools]
+packages = ["ds_guardian"]
+>>>>>>> 3c0a8b2 (Release 1.0.0)
